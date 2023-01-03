@@ -1,0 +1,10 @@
+from pyflink.datastream import StreamExecutionEnvironment
+
+
+def topology():
+    env = StreamingExecutionEvironment.get_exeuction_environment()
+    env.set_parallelism(1)
+
+
+if __name__ == '__main__':
+    topology()
