@@ -20,8 +20,6 @@ if youre on the py version im on 3.8.x, downgraded protobuf to 3.20.0
 output_path = "../"
 test_log = "/Users/chris/Code/liveWow/testlog.txt"
 def topology():
-    test = DeserializeLogLine()
-    print(test.__class__)
     env = StreamExecutionEnvironment.get_execution_environment()
     env.set_parallelism(1)
     source = FileSource.for_record_stream_format(StreamFormat.text_line_format(), test_log) \
