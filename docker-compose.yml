@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  flink-server:
+    container_name: flink-server
+    platform: "linux/amd64"
+    tty: true
+    entrypoint: [ "tail", "-f", "/dev/null" ]
+    build:
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - 8081:8081
+
+

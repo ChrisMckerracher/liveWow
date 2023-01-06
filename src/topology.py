@@ -1,4 +1,4 @@
-from pyflink.common import Duration, WatermarkStrategy, Encoder, Types
+from pyflink.common import Duration, WatermarkStrategy, Encoder
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.datastream.connectors.file_system import FileSource, StreamFormat, OutputFileConfig
 from pyflink.datastream.connectors.number_seq import NumberSequenceSource
@@ -9,14 +9,16 @@ from pyflink.datastream.connectors.file_system import StreamingFileSink
 
 """
 you need grpc installed else its all fucked 
+grpcio-tools
+if youre on the py version im on 3.8.x, downgraded protobuf to 3.20.0
  flink run \
       -pyclientexec /Users/chris/.pyenv/versions/liveWow/bin/python \
       -pyexec /Users/chris/.pyenv/versions/liveWow/bin/python \
       -py topology.py
 """
 
-output_path = "./"
-test_log = "./testlog.txt"
+output_path = "../"
+test_log = "/Users/chris/Code/liveWow/testlog.txt"
 def topology():
     test = DeserializeLogLine()
     print(test.__class__)
