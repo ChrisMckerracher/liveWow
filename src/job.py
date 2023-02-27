@@ -31,8 +31,6 @@ def job():
 
     #ds = env.from_source(source=source,watermark_strategy=WatermarkStrategy.for_monotonous_timestamps(),source_name='seq_num_source',type_info=Types.LONG())
 
-
-
     initStream = env.from_source(source, WatermarkStrategy.no_watermarks()\
                              .with_timestamp_assigner(LogLineTimestampSupplier()), "file-source")
 

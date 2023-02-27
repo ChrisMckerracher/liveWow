@@ -1,15 +1,17 @@
 import exception.InvalidLogLine as InvalidLogLine
 
 class CombatLogLine:
-    __timestamp = null
+    __timestamp = None
 
-    def __init__(self, String: log_line):
+    def __init__(self, log_line: str):
         pass
 
-    def deserialize(String: log_line):
-        if not is_valid_log_line(log_line):
+    @staticmethod
+    def deserialize(log_line: str):
+        if not CombatLogLine.is_valid_log_line(log_line):
             raise InvalidLogLine(log_line)
         pass
 
-    def is_valid_log_line(String: log_line):
+    @staticmethod
+    def is_valid_log_line(log_line: str):
         return True
