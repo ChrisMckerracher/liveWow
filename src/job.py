@@ -1,7 +1,8 @@
 from pyflink.common import Duration, WatermarkStrategy, Encoder, Types
-from pyflink.datastream import StreamExecutionEnvironment
+from pyflink.datastream import StreamExecutionEnvironment, RuntimeExecutionMode
 from pyflink.datastream.connectors.file_system import FileSource, StreamFormat, OutputFileConfig, FileSourceBuilder
 from pyflink.datastream.connectors.number_seq import NumberSequenceSource
+import logging
 
 from source.timestamp.LogLineTimestampSupplier import LogLineTimestampSupplier
 # from stream.map.DeserializeLogLine import DeserializeLogLine
@@ -22,26 +23,32 @@ test_log = "/opt/liveWow/testlog.txt"
 
 def raiseTest(x):
     raise Exception(x)
+def testDebug(x):
+    logging.warning(x)
+    return x
+
 def job():
     env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(1)
-    source = FileSource.for_record_stream_format(StreamFormat.text_line_format(), test_log) \
-        .monitor_continuously(Duration.of_millis(100)) \
+    #toDo: this may be problem code?
+    source = FileSource\
+        .for_record_stream_format(StreamFormat.text_line_format(), test_log) \
+        .monitor_continuously(Duration.of_seconds(1)) \
         .build()
 
-    #ds = env.from_source(source=source,watermark_strategy=WatermarkStrategy.for_monotonous_timestamps(),source_name='seq_num_source',type_info=Types.LONG())
+    initStream = env.from_source(source, WatermarkStrategy.no_watermarks(), "file-source")
 
-    initStream = env.from_source(source, WatermarkStrategy.no_watermarks()\
-                             .with_timestamp_assigner(LogLineTimestampSupplier()), "file-source")
+    #toDo: this may be the problem code
+    testStream = initStream.map(lambda x: testDebug(x)).key_by(lambda x: x[0:5])
 
-    testStream = initStream.map(lambda x : raiseTest(x))
 
+    #toDo: this is fine code?
     dummySink = StreamingFileSink.for_row_format(output_path, Encoder.simple_string_encoder()) \
         .with_output_file_config(
         OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \
         .build()
 
-    testStream.add_sink(dummySink)
+    testStream\
+        .add_sink(dummySink)
 
     env.execute('job')
 
