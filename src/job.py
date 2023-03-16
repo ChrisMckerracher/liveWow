@@ -8,6 +8,8 @@ from source.timestamp.LogLineTimestampSupplier import LogLineTimestampSupplier
 # from stream.map.DeserializeLogLine import DeserializeLogLine
 from pyflink.datastream.connectors.file_system import StreamingFileSink
 
+from domain.event.raw_event import RawEvent
+
 """
 you need grpc installed else its all fucked
 grpcio-tools
@@ -29,7 +31,6 @@ def testDebug(x):
 
 def job():
     env = StreamExecutionEnvironment.get_execution_environment()
-    #toDo: this may be problem code?
     source = FileSource\
         .for_record_stream_format(StreamFormat.text_line_format(), test_log) \
         .monitor_continuously(Duration.of_seconds(1)) \
@@ -37,11 +38,11 @@ def job():
 
     initStream = env.from_source(source, WatermarkStrategy.no_watermarks(), "file-source")
 
-    #toDo: this may be the problem code
-    testStream = initStream.map(lambda x: testDebug(x)).key_by(lambda x: x[0:5])
+    testStream = initStream.map(lambda raw_string: RawEvent(raw_string))\
+        .key_by(lambda raw_event: hash(raw_event))
 
 
-    #toDo: this is fine code?
+    #toDo: files arent actually being written
     dummySink = StreamingFileSink.for_row_format(output_path, Encoder.simple_string_encoder()) \
         .with_output_file_config(
         OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \
