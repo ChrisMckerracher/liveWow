@@ -8,6 +8,7 @@ from source.timestamp.LogLineTimestampSupplier import LogLineTimestampSupplier
 # from stream.map.DeserializeLogLine import DeserializeLogLine
 from pyflink.datastream.connectors.file_system import StreamingFileSink
 
+#https://stackoverflow.com/questions/70020100/import-local-packages-inside-pyflink
 from domain.event.raw_event import RawEvent
 
 """
