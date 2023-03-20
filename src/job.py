@@ -1,6 +1,7 @@
-from pyflink.common import Duration, WatermarkStrategy, Encoder, Types
+from pyflink.common import WatermarkStrategy, Encoder
 from pyflink.datastream import StreamExecutionEnvironment, RuntimeExecutionMode
 from pyflink.datastream.connectors.file_system import FileSource, StreamFormat, OutputFileConfig, FileSourceBuilder
+from pyflink.datastream.connectors.file_system import FileSink, OutputFileConfig, RollingPolicy
 from pyflink.datastream.connectors.number_seq import NumberSequenceSource
 import logging
 
@@ -21,39 +22,41 @@ if youre on the py version im on 3.8.x, downgraded protobuf to 3.20.0
       -py job.py
 """
 
-output_path = "../"
+output_path = "/opt/output"
 test_log = "/opt/liveWow/testlog.txt"
 
-def raiseTest(x):
-    raise Exception(x)
-def testDebug(x):
-    logging.warning(x)
-    return x
+def map_test(input):
+    return input[0:10]
 
 def job():
     env = StreamExecutionEnvironment.get_execution_environment()
-    source = FileSource\
-        .for_record_stream_format(StreamFormat.text_line_format(), test_log) \
-        .monitor_continuously(Duration.of_seconds(1)) \
-        .build()
+    env.enable_checkpointing(100)
+    ds = env.from_source(
+        source=FileSource.for_record_stream_format(StreamFormat.text_line_format(),
+                                                   test_log)
+                         .process_static_file_set().build(),
+        watermark_strategy=WatermarkStrategy.for_monotonous_timestamps(),
+        source_name="file_source"
+    )
 
-    initStream = env.from_source(source, WatermarkStrategy.no_watermarks(), "file-source")
+    testStream = ds.map(lambda raw_string: RawEvent(raw_string))\
+        .key_by(lambda raw_event: hash(raw_event))\
+        .map(lambda raw_event: str(raw_event), output_type=Types.STRING())\
 
-    testStream = initStream.map(lambda raw_string: RawEvent(raw_string))\
-        .key_by(lambda raw_event: hash(raw_event))
-
-
-    #toDo: files arent actually being written
-    dummySink = StreamingFileSink.for_row_format(output_path, Encoder.simple_string_encoder()) \
+    testStream.sink_to(
+        sink=FileSink.for_row_format(
+            base_path=output_path,
+            encoder=Encoder.simple_string_encoder())
         .with_output_file_config(
-        OutputFileConfig.builder().with_part_prefix('pre').with_part_suffix('suf').build()) \
+            OutputFileConfig.builder()
+            .with_part_prefix("prefix")
+            .with_part_suffix(".ext")
+            .build())
+        .with_rolling_policy(RollingPolicy.default_rolling_policy())
         .build()
-
-    testStream\
-        .add_sink(dummySink)
+    )
 
     env.execute('job')
-
 
 if __name__ == '__main__':
     job()

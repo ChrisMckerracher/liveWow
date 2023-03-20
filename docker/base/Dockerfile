@@ -18,5 +18,8 @@ ln -s /usr/local/bin/python3 /usr/local/bin/python && \
 apt-get clean && \
 rm -rf /var/lib/apt/lists/*
 
+echo "state.checkpoints.dir: file:///tmp/checkpoints" >> /opt/flink/conf/flink-conf.yaml
+echo "execution.checkpointing.interval: 10s" >> /opt/flink/conf/flink-conf.yaml
+
 # install PyFlink
 RUN pip3 install apache-flink==1.16.0
