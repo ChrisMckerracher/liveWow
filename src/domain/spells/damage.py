@@ -1,0 +1,1 @@
+#spell damage is same as swing damage except it has a spell object as well

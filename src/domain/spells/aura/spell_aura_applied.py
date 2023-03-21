@@ -5,3 +5,5 @@ from src.domain.spells.aura.spell_aura_event import SpellAuraEvent
 @dataclass
 class SpellAuraAppliedEvent(SpellAuraEvent):
     event_type = "SPELL_AURA_APPLIED"
+
+    def mapping(self) -> EventMapping :
