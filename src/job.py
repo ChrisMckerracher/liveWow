@@ -28,6 +28,7 @@ test_log = "/opt/liveWow/testlog.txt"
 def map_test(input):
     return input[0:10]
 
+# todo: determine how to do imports for local files correctly
 def job():
     env = StreamExecutionEnvironment.get_execution_environment()
     env.enable_checkpointing(100)

@@ -1,7 +1,24 @@
+from dataclasses import dataclass
+
+from src.domain.actor.actor import Actor
 from src.domain.event.event import Event
 
 
+@dataclass
+#todo: think about abstractions for this event
+#todo: verify data types. should things not be str? should some things be long?
 class SwingDamageEvent(Event):
+    source : Actor
+    destination : Actor
+    unit_guid : str
+    owner_guid : str
+    current_hp : int
+    max_hp : int
+    attack_power : int
+    spell_power : int
+    armor : int
+    total_damage_absorbed : int
+    resource_type : int
     def __init__(self, timestamp, sub_event, hide_caster, source_guid,
                  source_name, source_flags, source_raid_flags, dest_guid, dest_name, dest_flags,
                  dest_raid_flags, amount, overkill, school, resisted, blocked, absorbed, critical,
