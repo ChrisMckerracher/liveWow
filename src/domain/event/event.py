@@ -7,5 +7,5 @@ from src.domain.event.EventMapping import EventMapping
 class Event():
     event_type : str
 
-    def mapping(self) -> EventMapping:
-        pass
+    def mapping(self, maps : dict) -> EventMapping:
+        return EventMapping(**maps)
