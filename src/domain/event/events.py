@@ -1,7 +1,7 @@
 from enum import Enum
 
-from src.domain.spells.aura.spell_aura_applied import SpellAuraAppliedEvent
-from src.domain.spells.aura.spell_aura_applied_dose import SpellAuraAppliedDoseEvent
+from src.domain.event.spell.aura import SpellAuraAppliedEvent
+from src.domain.event.spell.aura import SpellAuraAppliedDoseEvent
 
 
 class Events(Enum):
