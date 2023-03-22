@@ -1,16 +1,16 @@
-from dataclasses import dataclass
-
+from src.domain.actor.actor import Actor
 from src.domain.actor.hp import HP
 from src.domain.actor.position import Position
-from src.domain.event.spell.spell_event import SpellEvent
+from src.domain.event.event import Event
 from src.domain.resource.Resource import Resource
+from src.domain.spells.spell import Spell
 
 
 @dataclass
-class SpellPeriodicEnergizeEvent(SpellEvent):
-    event_type = "SPELL_PERIODIC_ENERGIZE"
-
-    # ToDo: this is a common pattern, refactor a 'base' class
+class SpellHealBase(Event):
+    source : Actor
+    destination : Actor
+    spell : Spell
     unit_guid: str
     owner_guid: str
     hp: HP
@@ -25,6 +25,7 @@ class SpellPeriodicEnergizeEvent(SpellEvent):
     facing: str
     ilvl: float
     amount: int
-    over_energize: int
-    power_type: int
-    alternate_power_type: int
+    unmitigated_amount: int
+    overheal: int
+    absorbed: int
+    critical: int
