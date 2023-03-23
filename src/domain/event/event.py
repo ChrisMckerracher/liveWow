@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.domain.event.EventMapping import EventMapping
+from src.domain.event.serialization.mapping.event_map import EventMapping
 
 
 @dataclass
