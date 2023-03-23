@@ -5,10 +5,14 @@ from typing import TypeVar, Generic
 T = TypeVar("T")
 @dataclass
 class SimpleMap(Generic[T]):
-    assignment : tuple[int, T]
+    assignment : tuple[str, int, T]
 
-    def get_index(self) -> int:
+    def get_field_name(self) -> str:
         return self.assignment[0]
 
-    def get_typing(self) -> T:
+    def get_index(self) -> int:
         return self.assignment[1]
+
+
+    def get_typing(self) -> T:
+        return self.assignment[2]
