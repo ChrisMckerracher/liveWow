@@ -1,19 +1,18 @@
 from dataclasses import dataclass
 
-from typing import TypeVar, Generic
-
+from typing import TypeVar, Generic, Tuple, List
 
 T = TypeVar("T")
 
 # ToDo: a complex map should be a collection of simple maps. rewrite this later
 @dataclass
 class ComplexMap(Generic[T]):
-    assignment : tuple[str, list[int], T]
+    assignment : Tuple[str, List[int], T]
 
     def get_field_name(self) -> str:
         return self.assignment[0]
 
-    def get_indices(self) -> list[int]:
+    def get_indices(self) -> List[int]:
         return self.assignment[1]
 
     def get_typing(self) -> T:
