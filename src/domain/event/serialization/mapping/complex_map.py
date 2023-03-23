@@ -2,7 +2,10 @@ from dataclasses import dataclass
 
 from typing import TypeVar, Generic
 
+
 T = TypeVar("T")
+
+# ToDo: a complex map should be a collection of simple maps. rewrite this later
 @dataclass
 class ComplexMap(Generic[T]):
     assignment : tuple[str, list[int], T]

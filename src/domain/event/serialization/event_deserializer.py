@@ -4,7 +4,6 @@ from typing import TypeVar
 
 from src.domain.event.event import Event
 from src.domain.event.serialization.mapping.complex_map import ComplexMap
-from src.domain.event.serialization.mapping.event_map import EventMap
 from src.domain.event.serialization.mapping.simple_map import SimpleMap
 from src.test import RawEvent
 
@@ -13,7 +12,8 @@ T = TypeVar("T", bound=Event)
 class EventDeserializer:
 
     @classmethod
-    def deserialize(cls, log : RawEvent, event_map : EventMap, event_class : T) -> T:
+    def deserialize(cls, log : RawEvent, event_class : T) -> T:
+        event_map = T.get_mapping({})
         deserialized_mapping = {}
         # Sanity check event map before doing any more serialization work
         event_map.verify()
@@ -43,7 +43,6 @@ class EventDeserializer:
         for complex_map in complex_mappings:
             cls.__deserialize_complex_map(log, complex_map, deserialized_mapping)
 
-
     @classmethod
     def __deserialize_complex_map(cls, log: RawEvent, complex_map : ComplexMap, deserialized_mapping : dict) -> None:
         field_name = complex_map.get_field_name()
@@ -54,7 +53,6 @@ class EventDeserializer:
 
         for index in indices :
             args.append(log[index])
-
 
         # ToDo: type has to be able to process string
         processed_log_value = processed_class(*args)
