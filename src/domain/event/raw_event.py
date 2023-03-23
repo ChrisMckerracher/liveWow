@@ -13,9 +13,8 @@ class RawEvent:
         self.index_mappings[1] = timestamp_and_event_type[1]
 
         iterator = 2
-        for i in split_log:
-            self.index_mappings[i] = split_log[i]
-            i += 1
+        for i in range(0, len(split_log)):
+            self.index_mappings[i + iterator] = split_log[i]
 
     def __getitem__(self, i):
         return self.index_mappings[i]

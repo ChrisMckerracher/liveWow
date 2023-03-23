@@ -1,3 +1,4 @@
+import json
 from dataclasses import dataclass
 from typing import List
 
@@ -13,3 +14,6 @@ class Event():
     @classmethod
     def get_mapping(cls, simple_maps : List[SimpleMap], complex_maps : List[ComplexMap]) -> EventMap:
         return EventMap(simple_maps, complex_maps)
+
+    def __str__(self):
+        return str(json.dumps(self.__dict__, default=lambda o: o.__dict__))

@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from typing import TypeVar, List
 
 from src.domain.event.event import Event
+from src.domain.event.raw_event import RawEvent
 from src.domain.event.serialization.mapping.complex_map import ComplexMap
 from src.domain.event.serialization.mapping.simple_map import SimpleMap
-from src.test import RawEvent
 
 #ToDo: verify if the binding can work like this
 T = TypeVar("T", bound=Event)
