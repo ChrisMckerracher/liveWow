@@ -19,9 +19,9 @@ class SpellEvent(Event):
 
     @classmethod
     def get_mapping(cls, simple_maps : List[SimpleMap], complex_maps : List[ComplexMap]) -> EventMap:
-        caster_complex_map = ComplexMap(("caster", [2, 3, 4, 5], Actor))
-        target_complex_map = ComplexMap(("target", [6, 7, 8, 9], Actor))
-        spell_complex_map = ComplexMap(("spell", [10, 11, 12], Spell))
+        caster_complex_map = ComplexMap(("caster", [SimpleMap(("id", 2, str)), SimpleMap(("name", 3, str)), SimpleMap(("flags", 4, str)), SimpleMap(("raid_flags", 5, str))], Actor))
+        target_complex_map = ComplexMap(("target", [SimpleMap(("id", 6, str)), SimpleMap(("name", 7, str)), SimpleMap(("flags", 8, str)), SimpleMap(("raid_flags", 9, str))], Actor))
+        spell_complex_map = ComplexMap(("spell", [SimpleMap(("id", 10, str)), SimpleMap(("name", 11, str)), SimpleMap(("school", 12, str))], Spell))
 
         complex_maps = copy(complex_maps)
 

@@ -26,7 +26,7 @@ class EventMap:
 
     def __verify_complex_map(self, verification_map):
         for i in self.complex_map:
-            for index in i.get_indices():
+            for index in [x.get_index() for x in i.get_maps()]:
                 if index in verification_map:
                     raise VerificationException(f"index {index} is defined more than once in the event map")
                 verification_map[index] = True

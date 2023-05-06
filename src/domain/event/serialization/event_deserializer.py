@@ -22,6 +22,7 @@ class EventDeserializer:
         complex_mappings = event_map.complex_map
         cls.__deserialize_simple_maps(log, simple_mappings, deserialized_mapping)
         cls.__deserialize_complex_maps(log, complex_mappings, deserialized_mapping)
+        print(deserialized_mapping)
 
         return event_class(**deserialized_mapping)
 
@@ -29,14 +30,16 @@ class EventDeserializer:
     def __deserialize_simple_maps(cls, log : RawEvent, simple_mappings : List[SimpleMap], deserialized_mapping : dict) -> None:
         for simple_map in simple_mappings:
             field_name = simple_map.get_field_name()
-            index = simple_map.get_index()
-            processed_class = simple_map.get_typing()
+            deserialized_mapping[field_name] = cls.__deseriliaze_simple_map(log, simple_map)
 
-            raw_log_value = log[index]
+    @classmethod
+    def __deseriliaze_simple_map(cls, log: RawEvent, simple_map: SimpleMap):
+        index = simple_map.get_index()
+        processed_class = simple_map.get_typing()
 
-            # ToDo: type has to be able to process string
-            processed_log_value = processed_class(raw_log_value)
-            deserialized_mapping[field_name] = processed_log_value
+        raw_log_value = log[index]
+
+        return processed_class(raw_log_value)
 
     @classmethod
     def __deserialize_complex_maps(cls, log : RawEvent, complex_mappings : List[ComplexMap], deserialized_mapping : dict) -> None:
@@ -46,14 +49,16 @@ class EventDeserializer:
     @classmethod
     def __deserialize_complex_map(cls, log: RawEvent, complex_map : ComplexMap, deserialized_mapping : dict) -> None:
         field_name = complex_map.get_field_name()
-        indices = complex_map.get_indices()
+        simple_maps = complex_map.get_maps()
         processed_class = complex_map.get_typing()
 
-        args = []
+        kargs = {}
 
-        for index in indices:
-            args.append(log[index])
+        for simple_map in simple_maps:
+            simple_field_name = simple_map.get_field_name()
+            processed_value = cls.__deseriliaze_simple_map(log, simple_map)
+            kargs[simple_field_name] = processed_value
 
         # ToDo: type has to be able to process string
-        processed_log_value = processed_class(*args)
+        processed_log_value = processed_class(**kargs)
         deserialized_mapping[field_name] = processed_log_value
